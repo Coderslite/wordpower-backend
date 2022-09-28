@@ -18,7 +18,7 @@ const con = require('./helpers/db_config')
 
 router.get('/', (req, res, next) => {
 
-            const sql = "SELECT * FROM users WHERE token ='${req.token}'";
+            const sql = "SELECT * FROM users";
             con.query(sql, function (error, result) {
                 if (error) throw error;
                 res.status(200).json({
