@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const handleVerifyToken = require('./helpers/verify_token')
+// const handleVerifyToken = require('./helpers/verify_token')
 
 const mysql = require('mysql');
 
@@ -30,7 +30,7 @@ router.get('/', (req, res, next) => {
 })
 
 
-router.get('/all', handleVerifyToken, (req, res, next) => {
+router.get('/all',  (req, res, next) => {
     jwt.verify(req.token, 'secretKey', (err, authData) => {
         if (err) {
             // res.sendStatus(403)
@@ -54,7 +54,7 @@ router.get('/all', handleVerifyToken, (req, res, next) => {
 })
 
 
-router.patch('/', handleVerifyToken, jsonParser, (req, res, next) => {
+router.patch('/',  jsonParser, (req, res, next) => {
     const firstName = req.body.first_name;
     const lastName = req.body.last_name;
 
