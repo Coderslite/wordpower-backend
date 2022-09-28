@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-// const handleVerifyToken = require('./helpers/verify_token')
+const handleVerifyToken = require('./helpers/verify_token')
 
 const mysql = require('mysql');
 
@@ -16,9 +16,17 @@ const con = require('./helpers/db_config')
 
 
 
-router.get('/', (req, res, next) => {
-
-            const sql = "SELECT * FROM users";
+router.get('/', handleVerifyToken, (req, res, next) => {
+    jwt.verify(req.token, 'secretKey', (err, authData) => {
+        if (err) {
+            // res.sendStatus(403)
+            res.status(403).json({
+                "status": false,
+                "message": "invalid token"
+            })
+        }
+        else {
+            const sql = `SELECT * FROM users WHERE token ='${req.token}'`
             con.query(sql, function (error, result) {
                 if (error) throw error;
                 res.status(200).json({
@@ -26,12 +34,22 @@ router.get('/', (req, res, next) => {
                     "data": result[0],
                 })
             })
+        }
+    })
 
 })
 
 
-router.get('/all',  (req, res, next) => {
-
+router.get('/all', handleVerifyToken, (req, res, next) => {
+    jwt.verify(req.token, 'secretKey', (err, authData) => {
+        if (err) {
+            // res.sendStatus(403)
+            res.status(403).json({
+                "status": false,
+                "message": "invalid token"
+            })
+        }
+        else {
             const sql = `SELECT * FROM users`
             con.query(sql, function (error, result) {
                 if (error) throw error;
@@ -40,11 +58,13 @@ router.get('/all',  (req, res, next) => {
                     "data": result,
                 })
             })
+        }
+    })
 
 })
 
 
-router.patch('/',  jsonParser, (req, res, next) => {
+router.patch('/', handleVerifyToken, jsonParser, (req, res, next) => {
     const firstName = req.body.first_name;
     const lastName = req.body.last_name;
 
