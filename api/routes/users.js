@@ -16,7 +16,7 @@ const con = require('./helpers/db_config')
 
 
 
-router.get('/', handleVerifyToken, (req, res, next) => {
+router.get('/', (req, res, next) => {
 
             const sql = `SELECT * FROM users WHERE token ='${req.token}'`
             con.query(sql, function (error, result) {
