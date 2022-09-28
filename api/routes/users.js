@@ -17,15 +17,7 @@ const con = require('./helpers/db_config')
 
 
 router.get('/', handleVerifyToken, (req, res, next) => {
-    jwt.verify(req.token, 'secretKey', (err, authData) => {
-        if (err) {
-            // res.sendStatus(403)
-            res.status(403).json({
-                "status": false,
-                "message": "invalid token"
-            })
-        }
-        else {
+
             const sql = `SELECT * FROM users WHERE token ='${req.token}'`
             con.query(sql, function (error, result) {
                 if (error) throw error;
@@ -34,8 +26,6 @@ router.get('/', handleVerifyToken, (req, res, next) => {
                     "data": result[0],
                 })
             })
-        }
-    })
 
 })
 
